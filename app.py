@@ -1,11 +1,15 @@
 import streamlit as st
 import gspread
 from datetime import date
-from oauth2client.service_account import ServiceAccountCredentials
+import json
+
+# === AUTENTICAZIONE GOOGLE ===
+creds = json.loads(st.secrets["google"])
+gc = gspread.service_account_from_dict(creds)
 
 # === CONFIGURAZIONE GOOGLE SHEETS ===
-# Dopo creeremo un file JSON per le credenziali (step 5)
 GOOGLE_SHEET_NAME = "Spese_Ponte"
+sheet = gc.open(GOOGLE_SHEET_NAME).sheet1
 
 # === LISTE A TENDINA ===
 fonti = ["", "CONTANTI", "BBVA", "ISYBANK", "REVOLUT", "PAYPAL"]
@@ -40,12 +44,6 @@ with st.form("form_spese"):
 
     if submitted:
         try:
-            # Autenticazione e apertura foglio
-            scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-            creds = ServiceAccountCredentials.from_json_keyfile_name("google_credentials.json", scope)
-            client = gspread.authorize(creds)
-
-            sheet = client.open(GOOGLE_SHEET_NAME).sheet1
             nuova_riga = [
                 data.strftime("%d/%m/%Y"),
                 entrate,
