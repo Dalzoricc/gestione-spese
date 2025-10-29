@@ -1,11 +1,9 @@
 import streamlit as st
 import gspread
 from datetime import date
-import json
 
 # === AUTENTICAZIONE GOOGLE ===
-creds = json.loads(st.secrets["google"])
-gc = gspread.service_account_from_dict(creds)
+gc = gspread.service_account_from_dict(st.secrets["google"])
 
 # === CONFIGURAZIONE GOOGLE SHEETS ===
 GOOGLE_SHEET_NAME = "Spese_Ponte"
